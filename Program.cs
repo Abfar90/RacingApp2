@@ -23,13 +23,14 @@ namespace RacingApp2
             Car mercedes = new Car("Mercedes AMG");
             Car macLaren = new Car("MacLaren Racing");
 
-
+            //Race is initiated.
             var redbullTask = RaceApp(redBull);
             var mercedesTask = RaceApp(mercedes);
             var macLarenTask = RaceApp(macLaren);
             var raceStatus = CarStatus(new List<Car> { redBull, mercedes, macLaren });
             var raceTasks = new List<Task> { redbullTask, mercedesTask, macLarenTask, raceStatus };
 
+            //Tracking if one of the car has finished to determine winner.
             bool winner = false;
 
             while (raceTasks.Count > 0)
@@ -82,7 +83,6 @@ namespace RacingApp2
 
                 await raceWinner;
                 raceTasks.Remove(raceWinner);
-                //return //(why does changing winner inside nested if statement work when this line is removed?)
             }
 
         }
@@ -95,9 +95,13 @@ namespace RacingApp2
 
             while (true)
             {
+                //Results in the sim time of race being 10x faster.
                 await Task.Delay(100);
 
+                //Counter for generating events every 30 seconds (3 seconds of sim time)
                 incidentCount++;
+
+                //Counter for each cars race time
                 car.RaceTime++;
 
                 if (car.DistanceDriven >= car.RaceDistance)
@@ -187,6 +191,8 @@ namespace RacingApp2
             }
         }
 
+        //Generates a number, if in given range which corresponds to 1/50 (fuel), 2/50(tire), 5/50(bird on windshield)
+        //or 10/50 (engine failure). Event is triggered.
         static int IncidentHandler(Car car)
         {
             int result = 0;
@@ -234,11 +240,13 @@ namespace RacingApp2
             return result;
         }
 
+        //Stops and delays the time following incident.
         static async Task timeDelay(double tick)
         {
             await Task.Delay(TimeSpan.FromSeconds(tick));
         }
 
+        //Converts time so that full min and sec are shown.
         public static (double min, double sec) convertSecToMin(double seconds)
         {
 
